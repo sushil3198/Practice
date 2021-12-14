@@ -1,0 +1,29 @@
+git --version   -> for checking the version number.
+
+touch fileName.extension ->  to create a file with specified extension.
+
+git init  ->  to initialize a folder as a git repository.
+
+
+git config --global user.name 'Sushil Sharma'    -> to config userName.
+git config --global user.email 'yourEmail'    -> to config the user email.
+
+git add fileName.extension    -> to add file to staging area.
+git status   -> to check what is in the staging area.
+
+git add *.extension   -> it will add all the files with .extension to the staging area.
+
+git add .  -> it will add everything to the stating area.
+
+git commit  -> to commit the files present in the staging area.
+(As soon as we hit enter, VIM editor will open, press i then enter the commit message, hit escape and then enter :wq to get out of the VIM editor.)
+
+to avoid above VIM Editor steps just use below command:
+
+git commit -m 'Commit Message'
+
+git remote add origin https://yourRepoLink.git      -> enter the command with your repository link.
+
+git push -u origin master   -> to push the code to the remote repository
+
+git pull   -> to pull the additional files (if any in the repo) to your local repository.
