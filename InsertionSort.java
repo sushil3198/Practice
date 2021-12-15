@@ -4,15 +4,15 @@ public class InsertionSort {
 
 	static int[] insSort(int arr[])
 	{
-		for(int i = 1; i<arr.length; i++)
+		for(int i = 1; i<arr.length; i++)// Loop for passes
 		{
 			// 12,54,65 | 7,45,23,8
 			int key,j;
 			key = arr[i];
 			j = i-1;
-			while(j >= 0 && arr[j] > key)
+			while(j >= 0 && arr[j] > key) // Loop for computations in each pass
 			{
-				arr[j+1] = arr[j];
+				arr[j+1] = arr[j];  // comparing the adjacent elements and swapping if while loop condition = true
 				j--;
 			}
 			arr[j+1] = key;
