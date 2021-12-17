@@ -115,9 +115,9 @@ public class PatternProblemsSimple {
 		Scanner sc1 = new Scanner(System.in);
 		int n1 = sc.nextInt();
 		int number = 1;
-		for(int i = 1; i<=n; i++)
+		for(int i = 1; i<=n1; i++)
 		{
-			for(int j = 1; j<= n-i; j++)
+			for(int j = 1; j<= n1-i; j++)
 			{
 				System.out.print("  ");
 			}
@@ -166,5 +166,38 @@ public class PatternProblemsSimple {
 			}
 			System.out.println();
 		}
+		
+		
+		
+		//		*
+		//		* * 
+		//		*   * 
+		//		*     * 
+		//		* * * * * 
+		
+		Scanner sc4 = new Scanner(System.in);
+		int n4 = sc.nextInt();
+		
+		System.out.println("*");
+		
+		for(int i = 2; i<=n4-1; i++)
+		{
+			System.out.print("* ");
+			for(int j = 1; j<=i-2; j++)
+			{
+				System.out.print("  ");
+			}
+			System.out.print("* ");
+			System.out.println();
+		}
+		
+		if(n4 > 1) { 
+			
+			for(int i = 1; i<=n4; i++)
+			{
+				System.out.print("* ");
+			}
+
+		}		
 	}
 }
