@@ -1,5 +1,5 @@
 package com.sushil.DSA;
-
+// Complexity O(n^2)
 public class InsertionSort {
 
 	static int[] insSort(int arr[])
