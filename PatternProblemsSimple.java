@@ -201,3 +201,4 @@ public class PatternProblemsSimple {
 		}		
 	}
 }
+// Pattern Problems
