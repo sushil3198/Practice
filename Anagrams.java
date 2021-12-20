@@ -4,8 +4,9 @@ public class Anagrams {
 
 	public static void main(String[] args) {
 		
-		String str1 = "silent";
-		String str2 = "listen";
+		String str1 = "aab";
+		String str2 = "abc";
+		boolean[] visited = new boolean[str2.length()];
 		
 		boolean isAnagram = false;
 		if(str1.length() == str2.length())
@@ -15,8 +16,9 @@ public class Anagrams {
 				isAnagram= false;
 				for(int j = 0; j < str2.length(); j++)
 				{
-					if(str2.charAt(j) == str1.charAt(i))
+					if(str2.charAt(j) == str1.charAt(i) && !visited[j])
 					{
+						visited[j] = true;
 						isAnagram = true;
 						break;
 					}
