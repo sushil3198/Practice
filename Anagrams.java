@@ -1,0 +1,38 @@
+package com.sushil.DSA;
+
+public class Anagrams {
+
+	public static void main(String[] args) {
+		
+		String str1 = "silent";
+		String str2 = "listen";
+		
+		boolean isAnagram = false;
+		if(str1.length() == str2.length())
+		{
+			for(int i = 0; i<str1.length(); i++)
+			{
+				isAnagram= false;
+				for(int j = 0; j < str2.length(); j++)
+				{
+					if(str2.charAt(j) == str1.charAt(i))
+					{
+						isAnagram = true;
+						break;
+					}
+				}
+				if(!isAnagram)
+					break;
+			}
+			
+			if(isAnagram)
+				System.out.println("Strings are Anagram");
+			else
+				System.out.println("Not Anagram");
+		}
+		else
+			System.out.println("Not an Anagram");
+		
+		
+	}
+}
