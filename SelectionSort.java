@@ -1,7 +1,7 @@
 package com.sushil.DSA;
 
 public class SelectionSort {
-
+// Time Complexity is O(n^2)
 	static int[] sSort(int arr[])
 	{
 		int indexOfMin = 0;
