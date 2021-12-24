@@ -1,7 +1,7 @@
 package com.sushil.DSA;
 
 public class PeakElement {
-
+// Peak Element is same as fnding Max element of an Array.
 	static int findPeakElement(int arr[])
 	{
 		int max = arr[0];
