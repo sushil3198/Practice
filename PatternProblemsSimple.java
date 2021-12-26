@@ -1,5 +1,6 @@
 package com.sushil.DSA;
 
+// Pattern Problems
 import java.util.Scanner;
 
 public class PatternProblemsSimple {
