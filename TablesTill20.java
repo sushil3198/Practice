@@ -1,5 +1,5 @@
 package com.sushil.DSA;
-
+// Print table till 20
 public class TablesTill20 {
 
 	public static void main(String[] args) {
