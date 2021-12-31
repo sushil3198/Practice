@@ -1,5 +1,5 @@
 package com.sushil.DSA;
-
+// brute force optimised
 public class Anagrams {
 
 	public static void main(String[] args) {
