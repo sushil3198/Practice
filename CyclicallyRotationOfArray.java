@@ -2,6 +2,7 @@ package com.sushil.DSA;
 //	Given an array, rotate the array by one position in clock-wise direction.
 // Input :  {1,2,3,4,5}
 // Output : {5,1,2,3,4}
+// 
 public class CyclicallyRotationOfArray {
 
 	public static void main(String[] args) {
