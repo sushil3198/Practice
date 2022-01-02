@@ -20,7 +20,7 @@ git commit  -> to commit the files present in the staging area.
 
 to avoid above VIM Editor steps just use below command:
 
-git commit -m 'Commit Message'
+git commit -m 'Commit Message' .
 
 git remote add origin https://yourRepoLink.git      -> enter the command with your repository link.
 
