@@ -1,5 +1,5 @@
 package com.sushil.DSA;
-
+//
 public class SumOfAllNumsInString {
 
 	public static void main(String[] args) {
