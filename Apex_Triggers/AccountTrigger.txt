@@ -18,7 +18,7 @@ trigger NewOppsInsertTrigger on Account (after Insert, after Update)
 		accIdSet.add(a);
 	}
 
-	Map<Id,Account> accMap = [Select Id, (Select Id,Name from Opportunities) from Account where Id IN :accIdSet];
+	Map<Id,Account> accMap = Map<id,Account>([Select Id, (Select Id,Name from Opportunities) from Account where Id IN :accIdSet]);
 
 	List<Opportunity> oppList = new List<Opportunity>();
 	for(Account a : trigger.new)
@@ -57,7 +57,7 @@ trigger PreventAccountDeleteTrigger on Account (before delete)
 	}
 
 
-	Map<Id,Account> accOppsMap = [Select Id,Name, (Select Id from Opportunities) FROM Account WHERE Id IN :accIdSet];
+	Map<Id,Account> accOppsMap = Map<Id,Account>([Select Id,Name, (Select Id from Opportunities) FROM Account WHERE Id IN :accIdSet]);
 
 	for(Account a : trigger.old)
 	{
