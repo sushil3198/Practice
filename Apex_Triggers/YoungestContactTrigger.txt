@@ -1,0 +1,24 @@
+There is a birthDate__c field on Contact, When a contact is created, youngest Contact will be stamped (mapped/assigned) on Parent account lookup of contact on account youngestContact__c field.
+
+trigger ContactTrigger on Contact (after Insert)
+{
+	Set<Id> idSet = new Set<Id>();
+	for(Contact c : trigger.new)
+	{
+		idSet.add(c.AccountId);
+	}
+
+	Contact con = [Select Id, Name, birthDate__c from Contact ORDER BY birthDate__c Limit 1];
+
+	Map<Id, Account> accMap = [Select Id, Name, (Select Id, Name, birthDate__c from contacts) from Account WHERE Id IN :idSet];
+
+	for(Contact c : trigger.new)
+	{
+		if(c.birthDate__c < con.birtDate__c)
+		{
+			accMap.get(c.AccountId).youngestContact__c = c.birthDate__c;
+		}
+		else
+			accMap.get(c.AccountId).youngestContact__c = con.birthDate__c;
+	}
+}
