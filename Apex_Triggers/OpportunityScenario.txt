@@ -1,0 +1,37 @@
+Whenever Account is Updated, update the description with Account Name of related Opportunities When Probability is between 50 and 100
+
+
+object : Account
+event : after
+dml : update
+
+logic : get the List of Account iDs being updated.
+		get the list of related Opps
+		check whether Probablity of related opps is b/w 50 & 100, update description if true.
+
+
+trigger AccountRelatedOppsTrigger on Account (after update)
+{
+	Set<Id> accIdSet = new Set<Id>();
+	for(Account a : trigger.new)
+	{
+		accIdSet.add(a.Id);
+	}
+
+	Map<Id,Account> accOppsMap = new Map<Id,Account>([Select Id, Name, (Select Id,Name, Probability from Opportunities) FROM Account WHERE Id IN :accIDSet]);
+	List<Opportunity> oppsToUpdate = new list<Opportunity>();
+
+	for(Account a : trigger.new)
+	{
+		for(Opportunity o : accOppsMap.get(a.Id).opportunities)
+		{
+			if(o.Probability >= 50 && o.Probability < 100)
+				o.description = 'New Description' + a.Name;
+				oppsToUpdate.add(o);
+		}
+	}
+
+	if(oppsToUpdate.size() > 0)
+		update oppsToUpdate;
+}
+
