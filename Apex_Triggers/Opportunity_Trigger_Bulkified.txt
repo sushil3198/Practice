@@ -1,0 +1,20 @@
+Create a bulkified Apex trigger that adds a follow-up task to an opportunity if its stage is Closed Won. Fire the Apex trigger after inserting or updating an opportunity.
+
+trigger ClosedOpportunityTrigger on Opportunity (after Insert, after Update)
+{
+    
+    List<Task> taskList = new List<Task>();
+    
+    for(Opportunity o : trigger.new)
+    {
+        if(o.StageName == 'Closed Won'){
+            Task t = new Task(WhatId = o.Id, Subject = 'Follow Up Test Task');
+            taskList.add(t);
+        }
+    }
+    
+    if(taskList.size() > 0)
+    {
+        insert taskList;
+    }
+}
