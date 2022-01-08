@@ -1,0 +1,68 @@
+Insert an Opportunity whenever a new account is created or updated if no opportunity is already associated with the account.
+
+Object: Account
+Event: after
+dml: insert or update
+
+Logic: Get the id of accounts in trigger.new
+	   Get the opportunities associated with the AccountList.
+	   Check the size of opps in oppList, if size() == 0, then insert a new Opportunity.
+	   For related objects we use Map.
+
+
+trigger NewOppsInsertTrigger on Account (after Insert, after Update)
+{
+	Set<Id> accIdSet = new Set<Id>();
+	for(Account a : trigger.new)
+	{
+		accIdSet.add(a);
+	}
+
+	Map<Id,Account> accMap = [Select Id, (Select Id,Name from Opportunities) from Account where Id IN :accIdSet];
+
+	List<Opportunity> oppList = new List<Opportunity>();
+	for(Account a : trigger.new)
+	{
+		if(accMap.get(a.Id).opportunities.size() == 0)
+		{
+			Opportunity opp = new Opportunity(Name = a.Name, Phone = a.Name, AccountId = a.Id);
+			oppList.add(opp);
+		}
+	}
+
+	if(oppList.size() > 0)
+		insert oppList;
+}
+
+
+
+Prevent Account deletion if it has existing Opportunities.
+
+object : Account
+event : before
+dml : delete
+
+logic :   Get list of Account Id in trigger.new
+		  Get a List of Accounts having opportunities within the above list.
+		  if Opportunities size() > 0 then Acount.addError()
+
+
+trigger PreventAccountDeleteTrigger on Account (before delete)
+{
+	Set<Id> accIdSet = new Set<Id>();
+
+	for(Account a : trigger.old)
+	{
+		accIdset.add(a.Id);
+	}
+
+
+	Map<Id,Account> accOppsMap = [Select Id,Name, (Select Id from Opportunities) FROM Account WHERE Id IN :accIdSet];
+
+	for(Account a : trigger.old)
+	{
+		if(accOppsMap.get(a.Id).opportunites.size() > 0)
+			a.addError('Cannot Delete this Account');
+	}
+
+}
