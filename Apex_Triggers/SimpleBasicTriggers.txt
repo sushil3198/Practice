@@ -1,0 +1,101 @@
+When ever a case is created with origin as email then set status as new and Priority as Medium.
+
+object : case
+event : before
+dml : insert
+
+logic : iterate over trigger.new 
+		check if origin is email
+		if true, update the status & priority field
+
+
+
+trigger CaseScenarioTrigger on Case (before Insert)
+{
+	for(Case c : trigger.new)
+	{
+		if(c.Origin == 'Email')
+		{
+			c.Status = 'New';
+			c.Priority = 'Medium';
+		}
+	}
+}
+
+
+When ever Lead is created with LeadSource as Web then give rating as cold otherwise hot.
+
+object : Lead
+event : before
+dml : insert
+
+logic : iterate over Lead in trigger.new
+		check for LeadSource value & then set the field values
+
+trigger LeadScenarioTrigger on Lead (before Insert)
+{
+	for(Lead l : trigger.new)
+	{
+		if(l.LeadSource == 'Web')
+			l.Rating = 'Cold';
+		else
+			l.Rating = 'Hot';
+	}
+}
+
+
+Whenever New Account Record is created then needs to create associated Contact Record automatically.
+
+object : Account
+event : after
+dml : Insert
+
+logic:  iterate over Account in triger.new for Account Inserted
+		Create a contact and set AccountId to the Account iterated.
+		bulkify the trigger and insert
+
+trigger InsertContactTrigger on Contact (after Insert)
+{
+	List<Contact> contactList = new List<Contact>();
+	if(trigger.isAfter){
+		for(Account a : trigger.new)
+		{
+			Contact c = new Contact(AccountId = a.Id, lastName = a.Name);
+			contactList.add(c);
+		}
+	}
+	
+
+	if(contactList.size() > 0)
+		insert contactList;
+}
+
+
+Whenever Account is created with Industry as Banking then create a contact for account, Contact Lastname as Account name and contact phone as account phone.
+
+object : Account
+event : after
+dml : insert
+
+logic :iterate over the Account in trigger.new
+		check if the account Industry is Banking
+		if true, Create a contact and set the Name and Phone
+
+
+trigger AccountIndustryTrigger on Account (after insert)
+{
+	List<Contact> cList = new List<Contact>();
+
+	if(Trigger.isAfter){
+		for(Account a : trigger.new)
+		{
+			if(a.Industry == 'Baking')
+			{
+				cList.add(new Contact(lastName = a.Name, AccountId = a.Id));
+			}
+		}
+	}
+
+	if(cList.size() > 0)
+		insert cList;
+}
