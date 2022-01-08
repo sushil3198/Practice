@@ -1,5 +1,17 @@
 There is a birthDate__c field on Contact, When a contact is created, youngest Contact will be stamped (mapped/assigned) on Parent account lookup of contact on account youngestContact__c field.
 
+object : contact
+event : after
+dml : insert
+
+Logic :  find the list of Account Id associated with contact inserted through trigger.new
+		 Find the youngest Contact in the associated Account.
+		 Find the list of Account having related Contacts within this list of Account id.
+		 iterate over the Contacts inserted and check whether the current birthdat < existing birthdat in database.
+		 finally update the account;
+
+
+
 trigger ContactTrigger on Contact (after Insert)
 {
 	Set<Id> idSet = new Set<Id>();
@@ -8,17 +20,17 @@ trigger ContactTrigger on Contact (after Insert)
 		idSet.add(c.AccountId);
 	}
 
-	Contact con = [Select Id, Name, birthDate__c from Contact ORDER BY birthDate__c Limit 1];
+	Contact con = [Select Id, Name, birthDate__c from Contact WHERE AccountId IN :idSet ORDER BY birthDate__c Limit 1]; // this will give the youngest contact from already commited accounts.
 
-	Map<Id, Account> accMap = new Map<Id,Account>([Select Id, Name, (Select Id, Name, birthDate__c from contacts) from Account WHERE Id IN :idSet]);
+	Map<Id, Account> accMap = new Map<Id,Account>([Select Id, Name, youngestContact__c, (Select Id, Name, birthDate__c from contacts) from Account WHERE Id IN :idSet]);
 
 	for(Contact c : trigger.new)
 	{
 		if(c.birthDate__c < con.birtDate__c)
 		{
-			accMap.get(c.AccountId).youngestContact__c = c.birthDate__c;
+			accMap.get(c.AccountId).youngestContact__c = c.Id;
 		}
 		else
-			accMap.get(c.AccountId).youngestContact__c = con.birthDate__c;
+			accMap.get(c.AccountId).youngestContact__c = con.Id;
 	}
 }
