@@ -10,7 +10,7 @@ trigger ContactTrigger on Contact (after Insert)
 
 	Contact con = [Select Id, Name, birthDate__c from Contact ORDER BY birthDate__c Limit 1];
 
-	Map<Id, Account> accMap = Map<Id,Account>([Select Id, Name, (Select Id, Name, birthDate__c from contacts) from Account WHERE Id IN :idSet]);
+	Map<Id, Account> accMap = new Map<Id,Account>([Select Id, Name, (Select Id, Name, birthDate__c from contacts) from Account WHERE Id IN :idSet]);
 
 	for(Contact c : trigger.new)
 	{
