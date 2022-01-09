@@ -1,0 +1,23 @@
+When ever Opportunity "Stage" is modified to "Closed Won" then set "Close Date" as "Today Date" and "Type" as "New Customer".
+
+object : Opportunity
+event : before
+dml : update
+
+logic : check for Stage name in trigger.new
+		if matches, check whether oldvalue != newValue
+		then Set the values to fields.
+
+
+trigger OpportunityScenarioTrigger on Opportunity (before update)
+{
+	
+	for(Opportunity o : trigger.new)
+	{
+		if(o.stageName == 'Closed Won' && trigger.oldMap.get(o.id).stageName != o.stageName)
+		{
+			o.closeDate = System.today();
+			o.Type = 'New Customer';
+		}
+	}
+}
