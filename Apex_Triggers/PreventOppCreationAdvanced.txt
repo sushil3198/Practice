@@ -1,0 +1,31 @@
+Write a Trigger to stop creating or updating Opportunities with Account having Working_in__c = "ASIA”
+
+
+object : Opportunity
+event : before
+dml : insert, update
+
+logic : find the list of accId in trigger.new
+		find the list of Account with working_In__c
+		iterate over trigger.new and check condition
+
+
+trigger PreventOppsTrigger on Opportunity (before Insert, before update)
+{
+	List<Id> accId = new List<Id>();
+
+	for(Opportunity o : trigger.new)
+	{
+		accId.add(o.AccountId);
+	}
+
+	Map<Id,Account> accMap = new Map<Id,Account>([Select Id, Working_in__c, (Select Id, StageName from Opportunities WHERE stageName = 'Closed Won') from Account WHERE Id IN :accId]);
+
+	for(Opportunity o : trigger.new)
+	{
+		if(accMap.get(o.AccountId).Working_in__c == 'ASIA' && accMap.get(o.AccountId).opportunities.size() >= 2)
+		{
+			o.addError('Account in ASIA, cannot delete');
+		}
+	}
+}
