@@ -1,0 +1,38 @@
+Preventing the users from creating Duplicate Accounts
+
+object : Account
+event : before
+dml : insert, update
+
+
+logic:  get a list of names in trigger.new
+		find the list of Account names already commited in database.
+		for isInsert addError, for isUpdate compare with oldValue then add Error
+
+
+trigger PreventDuplicateAccountTrigger on Account (before insert, before update)
+{
+	List<String> names = new List<String>();
+
+	for(Account a : trigger.new)
+	{
+		names.add(a.Name);
+	}
+
+	List<Account> existingAccounts = [Select Id,Name from Account WHERE Name IN :names];
+
+	for(Account a : trigger.new)
+	{
+		if(trigger.isInsert)
+		{
+			if(existingAccounts.size() > 0)
+				a.addError('Account already exist with same name');
+		}
+		if(trigger.isUpdate)
+		{
+			if(trigger.oldMap.get(a.Id).Name != a.Name && existingAccounts.size() > 0)
+				a.addError('Account already exist with same Name');
+		}
+	}
+
+}
