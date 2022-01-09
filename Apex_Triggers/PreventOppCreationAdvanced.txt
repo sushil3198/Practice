@@ -1,4 +1,4 @@
-Write a Trigger to stop creating or updating Opportunities with Account having Working_in__c = "ASIA”
+Write a Trigger to stop creating or updating Opportunities with Account having Working_in__c = "ASIA” and Account having atleast 2 Closed Won Opportunities
 
 
 object : Opportunity
