@@ -1,0 +1,34 @@
+when a new contact is created for a existing account then set contact otherphone as account phone.
+
+object : Contact
+event : before
+dml : insert
+
+logic: fetch the existing account id list from trigger.new
+	   find a list of Account within the existing id
+	   iterate over trigger.new and set the contact fields.
+
+
+trigger ContactScenarioTrigger on Contact (before Insert){
+	
+	Set<Id> accIdSet = new Set<Id>();
+	for(Contact c : trigger.new)
+	{
+		accIdSet.add(c.AccountId);
+	}
+
+	Map<Id,Account> accMap = new Map<Id,Account>([Select Id,Name,Phone from Account WHERE Id IN :accIdSet]);
+
+	if(accIdSet.size() > 0)
+	{
+		for(Contact c : trigger.new)
+		{
+			if(c.AccountId !=null && accMap.get(c.AccountId).Phone != null && accMap.containsKey(c.AccountId))
+			{
+				c.otherPhone = accMap.get(c.AccountId).Phone;
+			}
+			else
+			c.addError('Please check Parent Account Phone field');
+		}
+	}
+}
