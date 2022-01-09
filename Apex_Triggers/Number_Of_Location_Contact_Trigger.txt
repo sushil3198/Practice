@@ -1,0 +1,34 @@
+Creates the number of contacts which are equal to the number which we will enter in the Number of Locations field on the Account Object.
+
+object  : Account
+event : after
+dml : Insert
+
+logic:   Create a Map of Id and Number of Location for Accounts being inserted in trigger.new
+		 now iterate over the Id , use a for loop upto Number of Location and create Contact in that loop.
+		 Add the contacts to list and then Insert.
+
+
+trigger ContactInsertOnAccountTrigger on Account (after insert)
+{
+	
+	Map<Id, decimal> accIdMap = new Map<Id,decimal>();
+	for(Account a : trigger.new)
+	{
+		accIdMap.put(a.Id, a.Number_of_Location__c);
+	}
+
+	List<Contact> cList = new List<Contact>();
+
+	for(Id accId : accIdMap.keySet())
+	{
+		for(Integer i = 0; i<accIdMap.get(accId); i++)
+		{
+			Contact c = new Contact(lastName = 'Test '+ i, AccountId = accId);
+			cList.add(c);
+		}
+	}
+
+	if(cList.size() > 0)
+		insert cList;
+}
