@@ -1,0 +1,40 @@
+Whenever TestPhoneOpportunity__c field in opportunity is updated ,its related field (TestPhoneAccount__c) in Account and (TestPhoneContact__c ) in Contact should get updated with the updated value with TestPhoneOpportunity__c
+
+object : opportunity
+event : after
+dml : update
+
+logic: fetch the accountId from trigger.new
+	   fetch the accList from IdList
+	   fetch the contactList from Id List
+	   update the values in acc and con.
+
+
+trigger OpportunityAdvancedScenarioTriiger on Opportunity (after update)
+{
+	Set<id>accIdSet = new Set<id>();
+	Map<Id,Opportunity> accOppsMap= new Map<Id,Opportuntiy>();
+	for(Opportunity o : trigger.new)
+	{
+		if(o.TestPhoneOpportunity__c != trigger.oldMap.get(o.Id).TestPhoneOpportunity__c)
+		{
+			accIdSet.add(o.AccountId);
+			accOppsMap.put(o.AccountId, o);
+		}
+	}
+
+	List<Account> accList = [Select Id, TestPhoneAccount__c, (Select Id, TestPhoneContact__c from contacts) from Account WHERE Id IN :accIdSet];
+	List<Contact> cList = new List<Contact>();
+	for(Account a : accList)
+	{
+		a.TestPhoneAccount__c = accOppsMap.get(a.Id).TestPhoneOpportunity__c;
+		for(Contact c : a.contacts)
+		{
+			c.TestPhoneContact__c = accOppsMap.get(a.Id).TestPhoneOpportunity__c;
+			cList.add(c);
+		}
+	}
+
+	update accList;
+	update cList;
+}

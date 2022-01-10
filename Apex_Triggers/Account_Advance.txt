@@ -1,0 +1,29 @@
+When a field(city) is updated in Account then update same field(city) in related opportunities
+// considering city is a standard field
+object : Account
+event :after
+dml : update
+
+logic:   fetch the id of Accounts from trigger.new
+		 fetch opportunitites fromthese acc Ids
+		 updte the opp values.
+
+
+trigger AccountScenarioTrigger on Account (after update)
+{
+	Set<id> accIdSet  =  new Set<Id>();
+	for(Account a : trigger.new)
+	{
+		if(a.city != trigger.oldMap.get(a.Id).city)
+		accIdSet.add(a.Id);
+	}
+
+	List<Oportunity> oppList = [Select Id,City from Opportuntiy where AccountId IN :accIdSet];
+
+	for(Opportunity o : oppList)
+	{
+		o.City = trigger.newMap.get(o.AccountId).city;
+	}
+
+	update oppList;
+}

@@ -1,0 +1,37 @@
+When an opportunity is inserted or updated and the stage name is ‘Closed won’ then add the task.
+
+object : Opportunity
+event : after
+dml : insert, update
+
+logic: iterate over trigger.new
+	   check for isInsert amd isUpdate
+	   check the stageName and create task.
+
+
+trigger OpportunityScenarioTrigger on Opportunity (after insert, after update)
+{
+	List<task> taskList = new List<task>();
+	for(Opportunity o : trigger.new)
+	{
+		if(o.StageName == 'Closed Won')
+		{
+			if(trigger.isInsert)
+			{
+				Task t = new Task(whatId = o.Id, subject = o.Name);
+				taskList.add(t);
+			}
+			if(trigger.isUpdate)
+			{
+				if(o.stageName != trigger.oldMap.get(o.Id).stageName)
+				{
+					Task t = new Task(whatId = o.Id, subject = o.Name);
+					taskList.add(t);
+				}
+			}
+		}
+	}
+
+	if(taskList.size() > 0 )
+		insert taskList;
+}

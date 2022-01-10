@@ -1,0 +1,34 @@
+Divide individual balance equally on contacts based on the total balance on related accounts whenever account is created or updated
+
+object : Account
+event : after
+dml : insert, update
+
+logic: get the list of accounts being updated
+	   fetch the AccList and cList 
+	   update the contact field
+
+
+trigger AccountBalanceTrigger on Account (afte insert, after update)
+{
+	Set<id> accIdSet = new Set<Id>();
+	for(Account a : trigger.new)
+	{
+		if(a.Balance__c != trigger.olMap.get(a.Id).Balance__c)
+			accIdSet.add(a.id);
+	}
+
+	Map<Id,Account> accMap  = new Map<Id,Account>([Select Id, Balance__c,(Select Id, Balance__c from Contacts) from Account where Id IN :accIdSet]);
+	ListContact> cList = [Select Id, Balance__c from Contact where Id AccountId In :accIdSet];
+
+	for(Contact c : cList)
+	{
+		if(accMap.get(c.AccountId).contacts.size > 0)
+		{
+			c.Balance__c = accMap.get(c.AccountId).Balance__c/accMap.get(c.AccountId).contacts.size();
+		}
+	}
+
+	update cList;
+}
+
