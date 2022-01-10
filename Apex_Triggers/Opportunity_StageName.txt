@@ -1,0 +1,37 @@
+Update Account Rating to ‘Hot ‘on account when opportunity stage equals ‘closed one’
+
+object : opportunity
+event : after
+dml : insert, update
+
+logic : iterate over trigger.new and get list of AccountIds
+		get the list of Account Id 
+		append the account's field
+
+
+trigger OppTrigger on Opportunity (after insert, after update)
+{
+	Set<id> accId = new Set<Id>();
+	(forOpportunity o : trigger.new)
+	{	
+	if(o.stageName == 'Closed Won')
+		accId.add(o.AccountId);
+	}
+
+	List<Account> fetchedAccounts = [Select Id, Rating from Account WHERE Id IN :accId];
+	List<Account> aList = new List<Account>();
+
+	if(fetchedAccounts.size() > 0)
+	{
+		for(Account a : fetchedAccounts)
+		{
+			a.Rating = 'Hot';
+			aList.add(a);
+		}
+	}
+
+	if(aList.size() > 0)
+	{
+		update aList;
+	}
+}

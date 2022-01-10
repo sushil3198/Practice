@@ -1,0 +1,15 @@
+Prefix first name with Dr when new Lead is created or updated
+
+object : lead
+event : before
+dml : insert, update
+
+logic: iterate over trigger.new and append L.name
+
+trigger LeadScenarioTrigger on Lead(before insert, before update)
+{
+	for(Lead l : trigger.new)
+	{
+		l.firstName = 'Dr ' + l.firstName;
+	}
+}

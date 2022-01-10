@@ -1,0 +1,39 @@
+When lead is created or updated then check if the email of lead is already there in existing contacts. If email already exist then throw error.
+
+object : lead
+event: before
+dml : insert, update
+
+logic : fetch email from trigger.new
+		fetch contact email having email from abve emailList
+		if list size > 0 nd isInsert addError
+		if oldValue =! new value and size != 0 then addError
+
+
+trigger LeadScenarioTrigger on Lead (before insert, before update)
+{
+	List<String> mailList = new List<String>();
+	for(Lead l : trigger.new)
+	{
+		mailList.add(l.email);
+	}
+
+	List<Contact> cList = [Select Id, email from Contact WHERE email IN :mailList];
+
+	for(Lead l :trigger.new)
+	{
+		if(trigger.isInsert)
+		{
+			if(cList.size() > 0)
+				l.addError('Email already exists');
+		}
+
+		if(trigger.isUpdate)
+		{
+			if(l.email != trigger.oldMap.get(l.id).email && cList.size() > 0)
+			{
+				l.addError('Email already exists');
+			}
+		}
+	}
+}
