@@ -1,0 +1,29 @@
+Whenever account is created with industry as banking then create a contact for account,contact lastname as account name and contact phone as account phone
+
+object : Account
+event : after
+dml : insert
+
+logic : fetch AccId from trigger.new using filter condition
+		map of account with ids
+		create contact and insert
+
+
+trigger AccountScenario on Account (after insert)
+{
+	
+	List<Contact> clist = new List<Contact>();
+
+	for(Account a : trigger.new)
+	{
+		if(a.Industry == 'Banking')
+		{
+			Contact c = new Contact(lastName = a.Name, Phone = a.Phone, AccountId = a.id);
+			cList.add(c);
+		}
+	}
+
+	if(cList.size() > 0)
+		insert cList;
+
+}
