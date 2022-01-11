@@ -1,0 +1,15 @@
+The trigger will prevent the users from deleting the Accounts. This is because System Administrator has all the permissions, we cannot change the permissions.
+
+object : Account
+event: before
+dml : delete
+
+trigger PreventAccDeleteTrigger on Account (before delete)
+{
+
+	for(Account a : trigger.old)
+	{
+		if(trigger.isDelete)
+		a.addError('This account cannot be deleted');
+	}
+}

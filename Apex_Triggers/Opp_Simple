@@ -1,0 +1,22 @@
+Whenever opportunity stagename is modified to closed won then set closedate as today and type as customer.
+
+object : opportunity
+event : before
+dml : update
+
+logic: iterate over trigger.new
+		check for oldval != newVal
+		append the req. fields
+
+
+trigger OppScenarioTrigger on Opportunity (before update)
+{
+	for(Opportunity o : triger.new)
+	{
+		if(o.StageName != trigger.oldMap.get(o.Id).stageName)
+		{
+			o.CloseDate = System.today();
+			o.type = 'Customer';
+		}
+	}
+}

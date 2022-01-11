@@ -1,0 +1,22 @@
+When a new Account record is inserted verify the industry field value, if industry field value is Education then assign the owner as helloWorld
+
+object : Account
+event : before
+dml : insert
+
+logic: iterate over trigger.new
+	   check the value for each account for industry
+	   if true then assign owner
+
+
+trigger AccountOwnerChangeTrigger on Account (before Insert)
+{
+	User u = [Select Id, Name from User WHERE username = 'helloWorld@gmail.com'];
+	for(Account a : trigger.new)
+	{
+		if(a.Industry == 'Education')
+		{
+			a.OwnerId = u.Id;
+		}
+	}
+}

@@ -1,0 +1,23 @@
+Whenever case is created with origin as email then set status as new and priority as Normal
+
+Object : case
+event : before
+dml : insert
+
+logic :  iterate over trigger.new
+		 check for origin
+		 append the status field
+
+
+trigger CaseScenarioTrigger on Case (before insert)
+{
+	for(Case c : trigger.new)
+	{
+		if(c.Status == 'Email')
+		{
+
+			c.Priority = 'Normal';
+			c.Status = 'New';
+		}
+	}
+}

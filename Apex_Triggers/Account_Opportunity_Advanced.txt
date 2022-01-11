@@ -1,0 +1,47 @@
+When the value of Phone field on contact is updated , I would like the field value of phone__c the opportunity and phone on account also get updated.
+
+objetc : Contact
+event : after
+dml : update
+
+logic : iterate over trigger.new and fetch AccId
+		find the Acc and Opps from that accId 
+		append the values on opps and acc
+
+
+trigger UpdatePhoneOnAccOppsTrigger on Contact (after update)
+{
+	Set<Id> accIdSet = new Set<id>();
+	for(Contact c : trigger.new)
+	{
+		if(c.Phone !=null && c.Phone != trigger.oldMap.get(c.Id).Phone)
+			accIdSet.add(c.AccountId);
+	}
+
+	Map<Id,Account> accMap = mew Map<Id,Account>([Select Id, Name, Phone, (Select Id,Phone__c from Opportunities) from Account WHERE Id IN :accIdSet]);
+	List<Account> accList = new List<Account>();
+	List<Opportunity> oppList = new List<Opportunity>();
+	for(Contact c : trigger.new)
+	{
+		if(c.Phone != trigger.oldMap.get(c.Id).Phone)
+		{
+			accMap.get(c.AccountId).Phone = c.Phone;
+			accList.add(accMap.get(c.AccuntId));
+
+			for(Opportunity o : accMap.get(c.AccountId).opportunities)
+			{
+				o.Phone__c = c.Phone;
+				oppList.add(o);
+			}
+		}
+
+	}
+
+	if(accList.size() > 0)
+		update accList;
+	if(oppList.size() > 0)
+		update oppList;
+
+}
+
+

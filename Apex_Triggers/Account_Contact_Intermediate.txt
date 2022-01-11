@@ -1,0 +1,34 @@
+Whenever account phone is modified then update contact record with phone field (otherphone with oldvalue and homephone with new value) associated with account records.
+
+object : Account
+event : after
+dml : update
+
+logic : iterate over trigger.new to get AccIds
+		fetch Contacts based on AccIds
+		iterate over fetched Contacts and append the values.
+
+
+trigger AccountScenarioTrigger on Account (after update)
+{
+	Set<Id> accIdSet = new Set<Id>();
+	for(Account a : trigger.new)
+	{
+		if(a.Phone != trigger.oldMap.get(a.Id).Phone)
+			accIdSet.add(a.Id);
+	}
+
+	List<Contact> cList = [Select Id, otherPhone, homePhone__c from Contact WHERE AccountId IN :accIdSet];
+
+	if(cList.size() > 0)
+	{
+		for(Contact c : cList)
+		{
+			c.otherPhone = trigger.oldMap.get(c.AccountId).Phone;
+			c.homePhone__c = trigger.newMap.get(c.Id).Phone;
+		}
+	}
+
+	update cList;
+
+}

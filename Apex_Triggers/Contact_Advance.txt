@@ -1,0 +1,32 @@
+When a new contact is created for existing account then set contact other phone as account phone
+
+object : contact
+event : before
+dml : insert
+
+logic : fetch the list of accounts from trigger.new
+		fetch the accounts from that accId
+		iterate over contactList and set the value.
+
+
+trigger ContactScenarioTrigger on Contact (before insert)
+{
+	Set<id> accIdSet = new Set<id>();
+	for(Contact c : trigger.new)
+	{
+		if(c.AccountId != Null)
+			accIdSet.add(c.Id);
+	}
+
+	Map<Id,Acount> accList = new Map<Id,Account>([Select Id, Phone from Account WHERE Id IN :accIdSet]);
+	List<Contact> cList = new List<Contact>();
+
+	for(Contact c : trigger.new)
+	{
+		c.Phone  = accMap.get(c.AccountId).Phone;
+		cList.add(c); 
+	}
+
+	if(cList.size() > 0)
+		update cList;
+}
