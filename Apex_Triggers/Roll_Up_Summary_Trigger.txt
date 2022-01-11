@@ -1,0 +1,62 @@
+Roll Up Summary Trigger
+
+Count the number of Contacts on Account using triggers.
+
+
+object: Contact
+event : after   -> after event because we need to update the Count post the dml operation
+dml : insert, update, delete, undelete // any of this event can result in increment or decrement of the Count
+
+logic : create a helper class and pass trigger.new and trigger.old
+		perform the the calculation in helper class
+
+
+trigger CounterTheContacts on Contact(after insert, after update, after delete, after undelete)
+{
+	if(trigger.isInsert || trigger.isUpdate || trigger.isDelete || trigger.isUndelete)
+	{
+		TriggerHandler.countContact(trigger.new, trigger.old);
+	}
+}
+
+
+public class TriggerHandler {
+	
+	public static void countContact(List<Contact> newContacts, List<Contact> oldContacts)
+	{
+
+		Set<Id> accIdSet = new Set<id>();
+		if(newContacts.size() > 0 && newContacts != null)
+		{
+			for(Contact c : newContacts)
+			{
+				if(c.AccountId != null)
+				{
+					accIdSet.add(c.AccountId);
+				}
+			}
+		}
+
+
+		if(oldContacts.size() > 0 &&  oldContacts != null)
+		{
+			for(Contact c : oldContact)
+			{
+				if(c.AccountId != null)
+				{
+					accIdSet.add(c.AccountId);
+				}
+			}
+		}
+
+
+		List<Account> accountList = [Select Id, NumberOfContacts__c, (Select Id from contacts) WHERE Id IN :accIdSet];
+
+		for(Account a : accountList)
+		{
+			System.debug('Number of Contacts in Account are: ' + a.contacts.size());
+			a.NumberOfContacts__c = a.contacts.size();
+		}
+
+	}
+}
