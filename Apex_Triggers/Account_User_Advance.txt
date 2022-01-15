@@ -1,0 +1,36 @@
+Create a Sales rep text field on Account. Whenever an account is inserted or updated, SalesRep__c field shoud get populated with the Account Owner.
+
+object : Account
+event : before
+dml  : insert,update
+
+logic : fetch the owner id from trigger.new
+		fetch list of usernames from owner Ids.
+		update the field wit user name.
+
+trigger AccountOwnerTrigger on Account (before insert, before update)
+{
+	Set<id> OwnerIdSet = new Set<id>();
+	for(Account a:  trigger.new)
+	{
+		ownerIdSet.add(a.ownerId);
+	}
+
+	Map<Id, user> userMap = new Map<Id,User>([Select Id, Name from User WHERE Id IN :ownerIdSet]);
+
+	for(Account a : trigger.new)
+	{
+		if(trigger.isInsert)
+		{
+			a.SalesRep__c = userMap.get(a.OwnerId).Name;
+		}
+
+		if(trigger.isUpdate)
+		{
+			if(a.ownerId != trigger.oldMap.get(a.Id).ownerId)
+			{
+				a.SalesRep__c = userMap.get(a.ownerId).Name;
+			}
+		}
+	}
+}
