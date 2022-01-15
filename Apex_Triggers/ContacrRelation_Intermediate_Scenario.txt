@@ -1,0 +1,25 @@
+Create a sObject called 'Contact RelationShip' having a lookup on Contact. Creat a field caled Contact Relationship(checkbox) on contact. Now, whenever contact is created and and Contact Relationship is checked,, then the Contact Relationship should automatically get created for that contact have the name same as lastName of contact.
+
+object : contact
+event : after
+dml : insert
+
+logic: iterate over trigger.new
+	   check for the checkbox true or not
+	   if true then create CR record.
+
+trigger CRonContactTrigger on contact (after insert)
+{
+	List<Contact_RelationShip__c> crList = new List<Contact_RelationShip__c>();
+	for(Contact c : trigger.new)
+	{
+		if(c.Contact_RelationShip__c == true)
+		{
+			Contact_RelationShip__c cr = new Contact_RelationShip(Name = c.lastName);
+			crList.add(cr);
+		}
+	}
+
+	if(crList.size() > 0)
+		insert crList;
+}
