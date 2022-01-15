@@ -1,0 +1,28 @@
+Create a sObject called 'Contact RelationShip' having a lookup on Contact. Creat a field caled Contact Relationship(checkbox) on contact.
+When we modify contact relationship owner, then owner name is systematically inhabited in contact relationship; after that owner, the name is systematically inhabited in the Name field of contact relationship.
+
+object : Contact_RelationShip__c
+event : before
+dml : update
+
+logic : fetch the ownerId from trgger.new
+		fetch the Names of owner from userlist
+		update the name field
+
+trigger COntactRelationShip on Contact_RelationShip__c (before update)
+{
+	Set<Id> userIdSet = mew Set<Id>();
+	for(Contact_RelationShip__c cr : trigger.new)
+	{
+		auserIdSet.add(cr.OwnerId);
+	}
+
+	Map<Id,User> userMap = new Map<Id,User>([Select Id,Name from User WHERE Id IN :userIdSet]);
+	for(Contact_RelationShip__c cr: trigger.new)
+	{
+		if(cr.OwnerId != trigger.OldMap.get(cr.Id).ownerId)
+		{
+			cr.Name = cr.Name + ' ' + userMap.get(cr.ownerId).Name;
+		}
+	}
+}

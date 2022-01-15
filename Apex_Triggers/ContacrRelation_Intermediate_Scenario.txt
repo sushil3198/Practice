@@ -15,7 +15,7 @@ trigger CRonContactTrigger on contact (after insert)
 	{
 		if(c.Contact_RelationShip__c == true)
 		{
-			Contact_RelationShip__c cr = new Contact_RelationShip(Name = c.lastName);
+			Contact_RelationShip__c cr = new Contact_RelationShip(Name = c.lastName, contact__c = c.Id);
 			crList.add(cr);
 		}
 	}
