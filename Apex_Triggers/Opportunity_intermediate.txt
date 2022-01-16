@@ -1,0 +1,43 @@
+Creates opportunity record if the account doesn't contain at least one opportunity.
+
+object : Account
+event : after
+account : insert, update
+
+logic : fetch accId from trigger.new
+		create a new instance of Map having Account and Opps within AccId
+		create Opps if opps.size() < 1
+
+
+trigger OppsCreateTrigger on Account (after insert, after update)
+{
+	Ste<Id> accIdSet = new Set<Id>();
+	for(Account a : trigger.new)
+	{
+		accIDSet.add(a);
+	}
+
+	Map<Id, Account> accOppsMap = new Ma<Id, Account>([Select Id, Name, (Select Id from opportunities) from Account WHERE Id IN :accIdSet]);
+	List<Opportunity> oppList = new Lst<Opportunity>();
+	for(Account a : trigger.new)
+	{
+		if(trigger.isInsert)
+		{
+			Opportunity o = new Opportunity(name = a.Name, accountId= = a.Id);
+			oppList.add(o);
+		}
+
+		if(trigger.isUpdate)
+		{
+			if(accOppsMap.get(a.Id).opportunities.size() < 1)
+			{
+				Opportunity opp = new Opportunity(name = a.Name; AccountId = a.Id);
+				oppList.add(opp);
+			}
+		}
+	}
+
+	if(oppList.size() > 0)
+		insert oppList;
+
+}
