@@ -1,0 +1,41 @@
+send email notification after new student record created into the system. Trigger makes use of handler class to send an email notification. Trigger collects newly created     student records and send them to the handler class to process further for the email notification.
+
+object : Student__c
+event : after
+dml : insert
+
+logic : send the trigger.new to handler class
+		in the class iterate over list and user Messaging class to send email.
+
+
+trigger SendEailTrigger on Student__c (after insert)
+{
+	if(trigger.isAdter&& trigger.isInsert)
+	{
+		HandlerClass.handlerMethod(trigger.new);
+	}
+}
+
+Handler class Code:
+
+
+public class HandlerClass{
+	
+	public static void handlerMethod(List<Student__c> studentList)
+	{
+		for(Student__c s : studentList)
+		{
+			Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage;
+
+			mail.setToAddress(s.Email__c);
+			mail.setSubject('Student Record Cretaed Successfully');
+			mail.setPlainTextBody
+                ('The Student' + st.Name + ' Registration is Completed with the below details :'+'\n\n' +
+                 'Student Name : ' + st.Name + '\n\n'+
+                 'Request Email : ' +st.Email__c + '\n\n' +
+                 'Class: ' +st.Class__c+ '\n\n' +
+                 'Please reach out to System Administrator if you require any further information');
+            Messaging.setEmailResult[] results = Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+		}
+	}
+}
