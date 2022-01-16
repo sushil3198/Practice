@@ -2,7 +2,7 @@ https://www.sfdc-lightning.com/p/salesforce-scenario-based-interview.html
 https://sfdcforum.wordpress.com/2018/07/15/sfdc-scenario-based-interview-questions/
 https://www.sfdcamplified.com/2020/06/salesforce-scenario-based-security-interview-questions.html
 https://architectxchange.com/salesforce-scenario-based-interview-questions-part-1/
-
+https://www.edureka.co/blog/interview-questions/salesforce-interview-questions/
 
 
 trigger Scenario Questions
