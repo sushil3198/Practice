@@ -1,0 +1,21 @@
+Write a trigger that prevents user to delete contact which is associated with the any account. When user tries to delete associated contact ,User will be presented with the error "Contact associated with account cannot be deleted"
+
+object : Contact
+event : before
+dml : delete
+
+logic : iterate over trigger.old
+		check for account != null
+		addError
+
+
+trigger PreventContactDeleteTrigger on Contact (before delete)
+{
+	for(Contact c : trigger.old)
+	{
+		if(c.AccountId != null)
+		{
+			c.addError('Contact associated with an Account cannot be deleted');
+		}
+	}
+}

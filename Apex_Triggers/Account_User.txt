@@ -1,0 +1,26 @@
+Whenever new account record creates"Account_Rep__c"  updates with the account owner name.
+
+object : Account
+event : before
+dml : insert
+
+logic: fetch the ownerId from trigger.new
+	   fetch the Name from OwnerId
+	   update the desired field.
+
+trigger updateAccRepTrigger on Account (after insert)
+{
+	Set<Id> OwnerIdSet = new Set<Id>();
+	for(Account a : trigger.new)
+	{
+		ownerIdSet.add(a.OwnerId);
+	}
+
+	Map<Id,User> userMap = new Map<Id,User>([Select Id, Name from User WHERE Id IN :ownerIdSet]);
+
+	for(Account a : trigger.new)
+	{
+		a.Account_Rep__c = userMap.get(a.OwnerId).Name; 
+	}
+
+}
