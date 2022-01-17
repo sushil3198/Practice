@@ -7,3 +7,10 @@ https://www.edureka.co/blog/interview-questions/salesforce-interview-questions/
 
 trigger Scenario Questions
 https://salessforcehacks.blogspot.com/2020/02/apex-trigger-examples-salesforce-apex.html
+
+
+Salesforce Developer interview questions: how to stand out
+https://www.masonfrank.com/insights/salesforce-developer-interview-questions
+
+80 Tricky SFDC Interview Questions
+https://www.sfdcamplified.com/2018/11/80-tricky-salesforce-interview-questions.html
