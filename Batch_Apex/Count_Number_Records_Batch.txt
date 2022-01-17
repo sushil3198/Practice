@@ -1,0 +1,26 @@
+Count the “Customer – Direct” account records processed by the batch class?
+
+public class CountAccTypeBatch iplements Database.Batchable<sObject>, Database.Stateful{
+	
+	public static Integer numberOfRecords = 0;
+	public DatabaseQueryLocator start(Database.BatchableContext bc)
+	{
+		String query = 'Select Id, Name, Type from Account';
+		return Database.getQueryLocator(query);
+	}
+
+	public void execute(Database.BatchableContext bc, List<Account> scope)
+	{
+		for(Account a : scope)
+		{
+			if(a.Type == 'Customer - Direct')
+				numberOfRecords++;
+		}
+	}
+
+	public void finish(Database.BatchableContext bc)
+	{
+		Id jobId = bc.getJobId();
+		System.debug(numberOfRecords);
+	}
+} 

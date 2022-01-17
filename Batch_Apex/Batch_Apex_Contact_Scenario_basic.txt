@@ -1,0 +1,36 @@
+Write batch apex program to get phone no. in the Contact object with the phone no. in the Corresponding Account object. Where Contact is a child of Account.
+
+public class MyBatchApex implements Database.Batchable<sObject>, Database.Stateful {
+	
+	public Database.QueryLocator Start(Database.BatchableContext bc)
+	{
+		String query = 'Select Id, Phone, Account.Phone from Contact';
+		return Database.getQueryLocator(query);
+	}
+
+
+	public void execute(Database.BatchableContext bc, List<Account> scope)
+	{
+		List<Contact> cList = new List<Contact>();
+		for(Contact c : scope)
+		{
+			c.Phone = c.Account.Phone;
+			cList.add(c);
+		}
+
+		if(cList.size() > 0)
+			update cList;
+	}
+
+	public void finish(Database.BatchableContext bc)
+	{
+		AsynchApexJob job = [Select Id, NumberOfErrors from AsynchApexJob WHERE Id = :bc.getJobId()];
+
+	}
+}
+
+
+
+In execute anonymous window excute the below code:
+MyBatchApex mba = new MyBatchApex();
+Id jobId = Database.executeBatch(mba);
