@@ -1,0 +1,35 @@
+Create three account records, one with missing required information. Once the code is executed then the two records are saved to the database. The one record which is not saved should print error ?
+
+public class RuntimeQueryClass {
+	
+	public static void interviewQuestion()
+	{
+		Account accOne = new Account(Name='Test1');
+		Account accTwo = new Account();
+		Account accThree = new Account(Name = 'Test 3');
+		List<Account> accList = new List<Account>();
+		accList.add(accOne);
+		accList.add(accTwo);
+		accList.add(accThree);
+
+		Database.SaveResult[] sr = Database.insert(accList, false);
+
+		for(Database.SaveResult sr : sr)
+		{
+			if(sr.isSuccess())
+			{
+				System.debug('Account inserted with record Id: ' + sr.getId());
+			}
+
+			else
+			{
+				for(Database.Error err : sr.getErrors())
+				{
+					System.debug(err.getStatusCode());
+					System.debug(err.getErrorMessage());
+					System.debug('Fields that affected insert' + err.getFields());
+				}
+			}
+		}
+	}
+}
