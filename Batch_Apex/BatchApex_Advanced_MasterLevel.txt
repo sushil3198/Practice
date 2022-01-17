@@ -1,0 +1,96 @@
+Update account description, number of employees, contact last name using batch apex. Get the failure record ids in the email. Also schedule the job for every Monday ?
+
+public class c implements Database.Batchable, Database.Stateful, Database.Scheduleable{
+	Set<Id> successRecordsId = new Set<Id>();
+	Set<Id> failureRecordsId = new Set<Id>();
+
+	public Database.QueryLocator start(Database.batchableContext bc)
+	{
+		String query = 'Select Id, description, number_of_Employees__c, (Select Id, lastName from contacts) From Account)';
+		return Database.getQueryLocator(query);
+	}
+
+	public void execute(Database.BatchableContext bc, List<Account> scope)
+	{
+		List<Account> accList = new List<Account>();
+		List<Contact> cList = new List<Contact>();
+
+		for(Account a : scope)
+		{
+			a.description = 'Random Text';
+			a.number_of_Employees__c = 70;
+			accList.add(a);
+			for(Contact c : a.contacts)
+			{
+				c.lastName = 'test ' + a.Name;
+				cList.add(c);
+			}
+		}
+
+		Database.SaveResult[] srAccount = Database.Update(accList, false);
+		Database.SaveResult[] srContact = Database.Update(cList, false);
+
+		for(Database.SaveResult sr : srAccount)
+		{
+			if(sr.isSuccess())
+			{
+				System.debug('Account successfully Updated');
+				successRecordsId.add(sr.getId());
+			}
+
+			else
+			{
+				for(Database.Error err : sr.getErrors())
+				{
+					failureRecordsId.add(sr.getId());
+				}
+			}
+		}
+
+		for(Database.SaveResult sr : srContact)
+		{
+			if(sr.isSuccess())
+			{
+				successRecordsId.add(sr.getId());
+			}
+
+			else
+			{
+				for(Database.error : sr.getErrors())
+				{
+					failureRecordsId.add(sr.getId());
+				}
+			}
+		}
+
+
+		public void finish(Database.BatchableContext bc)
+		{
+			AsynchApexJob job = [Select Id, NumbeOfErrors, Status, JobItemsProcessed, CreatedBy.email from AsyncApexJob WHERE Id = :bc.getJobId()];
+			Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+			String toAddress = job.CreatedBy.Email;
+			mail.setToAddress(toAddress);
+			mail.setSubject('Failure Records Id List');
+			mail.SetPlaintextBody('The Number of Jobs items Processed ' + job.JobItemsProcessed + 'Job Id '+ job.Id + 'Success Records Ids ' + successRecordsId + 'Failure Records Ids' + failureRecordsId);
+
+			Messaging.SendEmail(new Messaging.SingleEmailMessage[] { mail });
+		}
+	}
+}
+
+For Apex Scheduler
+
+public class ScheduleBatchApex implements Scheduleable
+{
+	public void execute(ScheduleableContext sc)
+	{
+		BatchApexAdvanced batch = new BatchApexAdvanced();
+	}
+}
+
+
+Now in Execute Annonymous Window run following code
+
+ScheduledBatchApex sba = new ScheduleBatchApex();
+String Cron_expresssion = '0 0 0 * * MON';
+String jobId = System.Schedule('Message', Cron_expression, sba);
