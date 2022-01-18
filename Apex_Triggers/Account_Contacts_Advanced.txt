@@ -1,0 +1,49 @@
+ Updates "Associated_Contacts__c" with the number of contacts associated with the account .   Whenever new contact creates/removed from the account ,The respective count would be   increased/Decreased accordingly. 
+ 
+Object : Contact
+event : before, after
+dml : insert, update, delete
+
+logic : fetch accId from trigger.new
+        now fetch accList from accIds
+        ow update the accList with values.
+
+
+trigger UpdateAccountTrigger on Contact (before insert, after insert, after update, before delete, after delete)
+{
+    Set<Id> accIdSet = new Set<Id>();
+    if(trigger.isInsert){
+        for(Contact c : trigger.new)
+        {
+            if(c.AccountId != null)
+                accIdSet.add(c.AccountId);
+        }
+    }
+
+    if(trigger.isUpdate)
+    {
+        for(contact c : trigger.new)
+        {
+            if(c.AccountId != null && trigger.oldMap.get(c.Id).AccountId != null)
+                accIdSet.add(c.AccountId);
+        }
+    }
+    if(trigger.isDelete)
+    {
+        for(Contact c : trigger.old)
+            accIdSet.add(c.AccountId);
+    }
+
+    List<Account> accList = [Select Id, Name, Assosciated_Contacts__c, (Select Id, AccountId from contacts) from Account WHERE Id IN :accIdSet];
+
+    for(Account a : accList)
+    {
+        if(a.Contacts.size() > 0)
+            a.Associated_Contact__c = a.Contacts.size();
+        else
+            a.Associated_Contact__c = 0;
+    }
+
+    update accList;
+
+}
