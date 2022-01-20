@@ -3,7 +3,7 @@ Schedulable {
    // Add here your email address
    global String [] email = new String[] {'test@test.com'};
 
-   // Start Method
+   // Start() Method
    global Database.Querylocator start (Database.BatchableContext BC) {
       
       // This is the Query which will determine the scope of Records and fetching the same
@@ -27,8 +27,8 @@ Schedulable {
          updtaedCustomerList.add(newObjScope);
       }
 
-      // Check if List is empty or not
-      if (updtaedCustomerList != null && updtaedCustomerList.size()>0) {
+      // Check if List is empty or no
+t      if (updtaedCustomerList != null && updtaedCustomerList.size()>0) {
          
          // Update the Records
          Database.update(updtaedCustomerList); System.debug('List Size
