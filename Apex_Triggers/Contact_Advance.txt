@@ -4,7 +4,7 @@ object : contact
 event : before
 dml : insert
 
-logic : fetch the list of accounts from trigger.new
+logic : fetc the list of accounts from trigger.new
 		fetch the accounts from that accId
 		iterate over contactList and set the value.
 
