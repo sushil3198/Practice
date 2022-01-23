@@ -1,0 +1,47 @@
+I have book and author objects. Author is parent and book is child and they are linked using lookup.
+I want to count total number of books written by an Author. On Author, we should be able to view number of books.
+
+
+object : book
+event : after
+dml  : insert, update, delete, undelete
+
+trigger updateRollUpTrigger on Book__c (after insert, after delete, after undelete){
+	
+	if(trigger.isInsert || trigger.isDelete || trigger.isUndelete){
+		HelperClass.helperMethod(trigger.new, trigger.old);
+	}
+}
+
+
+
+
+Helper Class
+
+public class HelperClass {
+	
+	public static void helperMethod(List<Book__c> newBookList, oldBookList){
+		
+		Set<Id> authorIdSet = new Set<Id>();z
+
+		if(newBookList.size() > 0 && newBookList != null){
+			for(Book__c b  : newBookList){
+				authorIdSet.add(b.AuthodId__c);
+			}
+		}
+
+		if(oldBookList.size() > 0 && oldBookList != null){
+			for(Book__c b : oldBookList){
+				authorIdSet.add(b.AuthorId__c);
+			}
+		}
+
+		List<Author__c> authorList = [Select Id, numberOfBooks__c, (Select Id from Books) from Author__c WHERE Id IN :authorIdSet];
+
+		for(Author__c a : authorList){
+			a.numberOfBooks__c = a.books.size();
+		}
+
+		update authorList;
+	}
+}
