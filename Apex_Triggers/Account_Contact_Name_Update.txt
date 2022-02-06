@@ -1,0 +1,26 @@
+Whenever new account is created with annual revenue more than 50,000 then add your_name in related contacts.
+
+object : Account
+event  : after
+dml : insert
+
+logic: fetch the accId from trigger.new using filter condition
+	   fetch the contact List from that accId
+	   update the contacts lastName
+
+trigger ContactUpdateTrigger on Account(after insert){
+	Set<Id> accIdSet = new Set<Id>();
+	for(Account a : trigger.new){
+		if(a.annual_Revenue__c > 50000)
+			accIdSet.add(a.Id);
+	}
+
+	List<Contact> cList = [Select Id, lastName from Contact WHERE AccountId IN :accIdSet];
+
+	for(Contact c : cList){
+		c.lastName = c.lastName + 'Sushil';
+	}
+
+	if(cList.size() > 0)
+		update cList;
+}
