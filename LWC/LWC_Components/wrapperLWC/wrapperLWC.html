@@ -3,8 +3,40 @@
     <lightning-card title="Wrapper Demo">
         <lightning-layout>
             <lightning-layout-item padding="around-medium">
-                <lightning-input label="Account Name" placeholder="Enter a account Name" onchange={inputHandler}></lightning-input>
-                <lightning-button label="Search" onclick={searchHandler} variant="brand"></lightning-button>
+                <lightning-input label="Account Name" placeholder="Enter account Name" onchange={inputHandler}></lightning-input>
+                <p class="slds-p-top_small">
+                    <lightning-button label="Search" onclick={searchHandler}
+                        variant="brand"></lightning-button>
+                </p>
+            </lightning-layout-item>
+        </lightning-layout>
+        <lightning-layout>
+            <lightning-layout-item size="12" padding="around-medium">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered"
+                    aria-label="Example table of Opportunities with vertical borders">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="recordId">Record Id</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Opportunity Name">Opportunity Name</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Contact Name">Contact Name</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={oppsList} for:item="opp">
+                            <tr key={opp.Id}>
+                                <td>{opp.Id}</td>
+                                <td>{opp.Name}</td>
+                                <td>{opp.AccountId}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
             </lightning-layout-item>
         </lightning-layout>
     </lightning-card>
