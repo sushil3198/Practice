@@ -28,11 +28,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template for:each={oppsList} for:item="opp">
-                            <tr key={opp.Id}>
-                                <td>{opp.Id}</td>
-                                <td>{opp.Name}</td>
-                                <td>{opp.AccountId}</td>
+                        <template for:each={mergedObj} for:item="m">
+                            <tr key={m.Id}>
+                                <td>{m.Id}</td>
+                                <td>{m.Name}</td>
+                                <td>{m.LastName}</td>
                             </tr>
                         </template>
                     </tbody>
