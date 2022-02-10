@@ -1,0 +1,1 @@
+Suppose we have a input box and a search button. When we add a Account name in inpt box, then it should fetch all the related Opps and contacts with that Account and displau them in a table.
