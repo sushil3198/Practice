@@ -6,9 +6,8 @@ export default class WrapperLWC extends LightningElement {
     receivedData;
     contactList;
     oppsList;
-    genericObject = {};
-    mergedObj;
-
+    tableValues;
+    dataTableValues;
     inputHandler(event) {
         this.searchString = event.target.value;
         console.log('searchTerm: ', this.searchString);
@@ -20,29 +19,32 @@ export default class WrapperLWC extends LightningElement {
             console.log('Response: ', this.receivedData);
             this.contactList = this.receivedData.cList;
             this.oppsList = this.receivedData.oppsList;
-            console.log('Contacts: ', this.contactList);
-            console.log('Opportunity: ', this.oppsList);
-            for(let key in this.contactList){
-                this.genericObject[key] = {name : this.contactList[key].LastName}
+
+            const combinedNames = this.contactList.map(contact => {
+                return contact.LastName;
+            })
+            const OppsName = this.oppsList.map(opp => {
+                return opp.Name;
+            })
+
+            this.tableValues = combinedNames.concat(OppsName);
+            console.log('yo---------', this.tableValues);
+
+            var atLastValues = [];
+            for (let i = 0; i < this.tableValues.length; i++) {
+                atLastValues.push({ id: i, Name: this.tableValues[i] });
             }
+            console.log('Obj==========>', atLastValues);
+            this.dataTableValues = atLastValues;
 
-            for(let key in this.oppsList){
-                this.genericObject[key] = {name : this.oppsList[key].Name, recordId : this.oppsList[key].Id}
-            }
-            console.log('generic',this.genericObject);
-
-            this.mergedObj = this.oppsList.concat(this.contactList);
-            console.log(this.mergedObj);
-
-           // Object.
         }).catch(error => {
             console.log('Error: ', error.body.message);
             console.log('Error Obj: ', error);
         })
     }
 
-    
 
-    
+
+
 
 }
