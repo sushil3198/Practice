@@ -17,8 +17,9 @@
             </lightning-layout-item>
         </lightning-layout>
         <lightning-layout>
-            <lightning-layout-item  padding="around-medium">
+            <lightning-layout-item size="4" padding="around-medium">
                 <lightning-input label="Food Preference" onchange={inputBoxHandler}></lightning-input>
+                <lightning-formatted-text value={foodPreference}></lightning-formatted-text>
             </lightning-layout-item>
         </lightning-layout>
     </lightning-card>

@@ -10,7 +10,7 @@ export default class DependentPickList extends LightningElement {
     apexResponse;
     pick2Value;
     pick2Options;
-
+    foodPreference;
     pickValueHandler(event) {
         this.pickValue = event.detail.value;
         console.log(this.pickValue);
@@ -29,6 +29,10 @@ export default class DependentPickList extends LightningElement {
             console.log(this.pick2Options)
         }).catch(error => { console.error('Error---->', error) })
 
+    }
+
+    inputBoxHandler(event){
+        this.foodPreference = event.target.value;
     }
 
 
