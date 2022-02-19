@@ -9,7 +9,7 @@ export default class DependentPickList extends LightningElement {
     ];
     apexResponse;
     pick2Value;
-    pick2Options
+    pick2Options;
 
     pickValueHandler(event) {
         this.pickValue = event.detail.value;
