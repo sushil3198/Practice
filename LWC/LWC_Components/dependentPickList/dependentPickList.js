@@ -11,12 +11,13 @@ export default class DependentPickList extends LightningElement {
     pick2Value;
     pick2Options;
     foodPreference;
+    isBusy = false;
     pickValueHandler(event) {
         this.pickValue = event.detail.value;
         console.log(this.pickValue);
-
+        this.isBusy = true;
         getMenuValues({ str: this.pickValue }).then(response => {
-
+            this.isBusy = false;
             this.apexResponse = response;
             console.log('Response======>', this.apexResponse);
 

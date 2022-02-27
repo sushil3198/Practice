@@ -1,4 +1,9 @@
 <template>
+    <template if:true={isBusy}>
+        <div>
+            <lightning-spinner variant="brand" size="medium"></lightning-spinner>
+        </div>
+    </template>
     <lightning-card title="Dependent Picklist">
         <lightning-layout>
             <lightning-layout-item size="3" padding="around-medium">
