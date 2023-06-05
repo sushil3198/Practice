@@ -27,3 +27,7 @@ git remote add origin https://yourRepoLink.git      -> enter the command with yo
 git push -u origin master   -> to push the code to the remote repository
 
 git pull   -> to pull the additional files (if any in the repo) to your local repository.
+
+Command to push the branch to git repo
+git push origin branch-name
+and then merge the branch into the main branch
