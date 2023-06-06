@@ -1,0 +1,16 @@
+Write a trigger whenever a user is deactivated, its Accounts,Contacts, Opportunites must be transfered to user's Manager
+Consider that User has a manager already assigned. Also keep in mind mixed DML exception.
+
+For now I am writing Logic inside Trigger itself. Please consider writing a Utility class and use Future methods.
+
+
+Object : User
+Event : After
+DML : Update
+Logic : Iterate over Trigger.new and check isActive == true or false.
+		Fetch the Id of User and using SOQL fetch Accounts WHERE OwnerId = UserId
+		Iterate over accounts and update the account Owner with user's Manager.
+		Once you update the accounts, Contacts and Opps owners will be updated automatically.
+		
+Trigger MassTransferUserTrigger on User(after update){
+}
