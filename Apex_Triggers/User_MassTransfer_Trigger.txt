@@ -21,6 +21,7 @@ Trigger MassTransferUserTrigger on User(after update){
 		}
 	}
 	
+	
 	List<Account> accList = [Select OwnerId from Account WHERE OwnerId IN :uerIdSet];
 	
 	if(!accList.isEmpty()){

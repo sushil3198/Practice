@@ -13,4 +13,20 @@ Logic : Iterate over Trigger.new and check isActive == true or false.
 		Once you update the accounts, Contacts and Opps owners will be updated automatically.
 		
 Trigger MassTransferUserTrigger on User(after update){
+
+	Set<Id> userIdSet = new Set<Id>();
+	for(user usr : Trigger.new){
+		if(usr.isActive != Trigger.oldMap.get(usr.Id).isActive && usr.isActive == false){
+			userIdSet.add(usr.Id);
+		}
+	}
+	
+	List<Account> accList = [Select OwnerId from Account WHERE OwnerId IN :uerIdSet];
+	
+	if(!accList.isEmpty()){
+		for(Account acc : accList){
+			acc.OwnerId = Trigger.newMap.get(acc.OwnerId).ManagerId;
+		}
+		update accList;
+	}
 }
