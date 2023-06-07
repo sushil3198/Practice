@@ -1,0 +1,6 @@
+Question 1) If we want to deactivate a user who is a part of Account Team. Will I be able to deactivate a user? If yes,
+			then will the user be removed from Account team automatically or it has to be a manual step?
+			
+Answer 1) Yes, I will be able to deactivate the user. The user will be removed from Account Team automatically because as soon as we
+		  deactivate the user we see a prompt which says, deactivating a user will remove the user from all delegated Groups. Also,
+		  user will be removed from all the teams.

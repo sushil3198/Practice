@@ -1,0 +1,14 @@
+Question 1) If we want to deactivate a user who is a part of Account Team. Will I be able to deactivate a user? If yes,
+			then will the user be removed from Account team automatically or it has to be a manual step?
+			
+Answer 1) Yes, I will be able to deactivate the user. The user will be removed from Account Team automatically because as soon as we
+		  deactivate the user we see a prompt which says, deactivating a user will remove the user from all delegated Groups. Also,
+		  user will be removed from all the teams.
+		  
+Question 2) If we are using a before save flow & we want to access the Formula field for the current record, will I be able to access
+			that formula field? If no, then what will be the workaround?
+			
+Answer 2) No, we won't be able to access the formula field for current record. We can fetch prior value of forumal field but cannot access
+		  current value. As a workaround, we can create formula variable in Flow, and mimic the foumula field logic within the flow which
+		  will help us to access the formula value in before save flow itself.
+		  
