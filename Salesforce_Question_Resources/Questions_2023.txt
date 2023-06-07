@@ -11,4 +11,3 @@ Question 2) If we are using a before save flow & we want to access the Formula f
 Answer 2) No, we won't be able to access the formula field for current record. We can fetch prior value of forumal field but cannot access
 		  current value. As a workaround, we can create formula variable in Flow, and mimic the foumula field logic within the flow which
 		  will help us to access the formula value in before save flow itself.
-		  
