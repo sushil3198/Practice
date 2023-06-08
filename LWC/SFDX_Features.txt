@@ -1,0 +1,6 @@
+Q.1> How to execute anonymous apex inside VScode using SFDX CLI?
+A.1> To execute anonymous in vsCode, go to the script folder and create a file with .apex extension.
+	 Now, write a piece of apex code that you want to execute anonymously.
+	 Now, Using command palette (ctrl+shift+p)or(cmnd+shift+p). Write SFDX: execute anonymous and select the first command and hit run.
+	 You can see the run result or logs in the vscode terminal.
+	 
